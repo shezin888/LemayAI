@@ -2,6 +2,7 @@ from fastapi import FastAPI, Form
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 from app.model import predict_emotion
+import asyncio
 
 # Initializing FastAPI app Obj
 app = FastAPI()
@@ -17,8 +18,8 @@ def root():
 
 # runs classifier on input and return result in JSON - used for test.ipynb results
 @app.post("/predict")
-def get_emotion(input_data: TextInput):
-    result = predict_emotion(input_data.text)
+async def get_emotion(input_data: TextInput):
+    result = await asyncio.to_thread(predict_emotion, input_data.text)
     return result
 
 
